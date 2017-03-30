@@ -13,7 +13,7 @@ public class Game extends JFrame {
 
     private void initUI() {
         add(new GameWindow());
-        setSize(250, 200);
+        setSize(450, 400);
         setTitle("Jesus Slays");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
