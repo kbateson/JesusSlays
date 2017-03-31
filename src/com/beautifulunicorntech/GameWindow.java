@@ -2,23 +2,36 @@ package com.beautifulunicorntech;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * Created by kbateson on 3/29/17.
  */
-public class GameWindow extends JPanel {
+public class GameWindow extends JPanel implements ActionListener {
 
-    private JLabel sprite;
+    //private JLabel spriteLabel;
+    private PlayerSprite sprite;
+    private Timer timer;
+    private final int DELAY = 10;
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        doDrawing(g);
+
+        Toolkit.getDefaultToolkit().sync();
+
         drawBG(g);
+        //this.add(spriteLabel);
     }
 
     private void drawBG(Graphics g) {
@@ -46,23 +59,59 @@ public class GameWindow extends JPanel {
         g2d.setColor(Color.orange);
         g2d.fill(sunRays);
 
-                Ellipse2D sun = new Ellipse2D.Double(22, 22, 50, 50);
+        Ellipse2D sun = new Ellipse2D.Double(22, 22, 50, 50);
         g2d.setColor(Color.yellow);
         g2d.fill(sun);
 
     }
 
-       private void loadImage() {
-
+    private void loadImage() throws MalformedURLException {
+        //spriteLabel = new JLabel(new ImageIcon(new URL("file:///Users/kbateson/Desktop/JesusSlays/src/com/beautifulunicorntech/standing.gif")));
+        //spriteLabel.setBounds(0,100,100,100);
     }
 
-    private void initGame() {
+    private void initGame() throws MalformedURLException {
         loadImage();
         setLayout(null);
+        addKeyListener(new TAdapter());
+        setFocusable(true);
+
+        sprite = new PlayerSprite();
+
+        timer = new Timer(DELAY, this);
+        timer.start();
     }
 
-    public GameWindow() {
+    public GameWindow() throws MalformedURLException {
         initGame();
+    }
+
+    private void doDrawing(Graphics g) {
+
+        Graphics2D g2d = (Graphics2D) g;
+        JLabel thing = sprite.getImage();
+        add(thing);
+        thing.setBounds(sprite.getX(), sprite.getY(), 100, 100);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        sprite.move();
+        repaint();
+    }
+
+    private class TAdapter extends KeyAdapter {
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            sprite.keyReleased(e);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            sprite.keyPressed(e);
+        }
     }
 
 }
