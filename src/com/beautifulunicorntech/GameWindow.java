@@ -17,21 +17,19 @@ import java.net.URL;
  */
 public class GameWindow extends JPanel implements ActionListener {
 
-    //private JLabel spriteLabel;
     private PlayerSprite sprite;
     private Timer timer;
     private final int DELAY = 10;
+    private JLabel spriteLabel;
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        doDrawing(g);
-
         Toolkit.getDefaultToolkit().sync();
 
         drawBG(g);
-        //this.add(spriteLabel);
+        doDrawing();
     }
 
     private void drawBG(Graphics g) {
@@ -65,13 +63,7 @@ public class GameWindow extends JPanel implements ActionListener {
 
     }
 
-    private void loadImage() throws MalformedURLException {
-        //spriteLabel = new JLabel(new ImageIcon(new URL("file:///Users/kbateson/Desktop/JesusSlays/src/com/beautifulunicorntech/standing.gif")));
-        //spriteLabel.setBounds(0,100,100,100);
-    }
-
     private void initGame() throws MalformedURLException {
-        loadImage();
         setLayout(null);
         addKeyListener(new TAdapter());
         setFocusable(true);
@@ -86,17 +78,14 @@ public class GameWindow extends JPanel implements ActionListener {
         initGame();
     }
 
-    private void doDrawing(Graphics g) {
-
-        Graphics2D g2d = (Graphics2D) g;
-        JLabel thing = sprite.getImage();
-        add(thing);
-        thing.setBounds(sprite.getX(), sprite.getY(), 100, 100);
+    private void doDrawing() {
+        spriteLabel = sprite.getImage();
+        add(spriteLabel);
+            spriteLabel.setBounds(sprite.getX(), sprite.getY(), 140, 100);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         sprite.move();
         repaint();
     }
