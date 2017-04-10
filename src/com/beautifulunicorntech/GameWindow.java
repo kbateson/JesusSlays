@@ -18,9 +18,11 @@ import java.net.URL;
 public class GameWindow extends JPanel implements ActionListener {
 
     private PlayerSprite sprite;
+    private EnemySprite esprite;
     private Timer timer;
     private final int DELAY = 10;
     private JLabel spriteLabel;
+    private JLabel espriteLabel;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -29,7 +31,8 @@ public class GameWindow extends JPanel implements ActionListener {
         Toolkit.getDefaultToolkit().sync();
 
         drawBG(g);
-        doDrawing();
+        drawPS();
+        drawES();
     }
 
     private void drawBG(Graphics g) {
@@ -69,6 +72,7 @@ public class GameWindow extends JPanel implements ActionListener {
         setFocusable(true);
 
         sprite = new PlayerSprite();
+        esprite = new EnemySprite();
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -78,10 +82,16 @@ public class GameWindow extends JPanel implements ActionListener {
         initGame();
     }
 
-    private void doDrawing() {
+    private void drawPS() {
         spriteLabel = sprite.getImage();
         add(spriteLabel);
-            spriteLabel.setBounds(sprite.getX(), sprite.getY(), 140, 100);
+        spriteLabel.setBounds(sprite.getX(), sprite.getY(), 140, 100);
+    }
+
+    private void drawES() {
+        espriteLabel = esprite.getImage();
+        add(espriteLabel);
+        espriteLabel.setBounds(300, 120, 100, 100);
     }
 
     @Override
