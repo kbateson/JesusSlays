@@ -126,10 +126,15 @@ public class GameWindow extends JPanel implements ActionListener {
                 eMoveX = 1;
             else if (esprite.getX() > sprite.getX())
                 eMoveX = -1;
-            if (esprite.getY() < sprite.getY())
+            if (esprite.getY() < sprite.getY()) {
                 eMoveY = 1;
-            else if (esprite.getY() > sprite.getY())
+                //setComponentZOrder(spriteLabel, 0);
+            } else if (esprite.getY() > sprite.getY()) {
                 eMoveY = -1;
+                //setComponentZOrder(espriteLabel, 0);
+            }
+            if(esprite.getDir() != eMoveX)
+                esprite.changeDir();
             esprite.dx = eMoveX;
             esprite.dy = eMoveY;
             esprite.move();

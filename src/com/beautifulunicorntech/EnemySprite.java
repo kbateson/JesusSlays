@@ -19,19 +19,32 @@ public class EnemySprite extends Sprite {
         initES();
         x = 300;
         y = 150;
+        dir = -1;
     }
 
     private void initES() {
-        standL = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/estandL.gif"));
-        //standR = new ImageIcon(EnemySprite.this.getClass().getResource("estandR.gif"));
-        //walkL = new ImageIcon(EnemySprite.this.getClass().getResource("ewalkL.gif"));
-        //walkR = new ImageIcon(EnemySprite.this.getClass().getResource("ewalkR.gif"));
-        //attackL = new ImageIcon(EnemySprite.this.getClass().getResource("eattackL.gif"));
-        //attackR = new ImageIcon(EnemySprite.this.getClass().getResource("eattackR.gif"));
+        standL = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/standL.gif"));
+        standR = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/standR.gif"));
+        walkL = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/walkL.gif"));
+        walkR = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/walkR.gif"));
+        //attackL = new ImageIcon(EnemySprite.this.getClass().getResource("attackL.gif"));
+        //attackR = new ImageIcon(EnemySprite.this.getClass().getResource("attackR.gif"));
         current = new JLabel(standL);
     }
 
     public JLabel getImage() {
         return current;
     }
+
+    public void changeDir() {
+        if(dir == -1) {
+            dir = 1;
+            current.setIcon(standR);
+        } else {
+            dir = -1;
+            current.setIcon(standL);
+        }
+    }
+
+    public int getDir() { return dir; }
 }
