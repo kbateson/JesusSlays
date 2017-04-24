@@ -25,12 +25,12 @@ public class PlayerSprite extends Sprite {
     }
 
     private void initPS() {
-        standL = new ImageIcon(PlayerSprite.this.getClass().getResource("bstandL.gif"));
-        standR = new ImageIcon(PlayerSprite.this.getClass().getResource("bstandR.gif"));
-        walkL = new ImageIcon(PlayerSprite.this.getClass().getResource("bcrawlL.gif"));
-        walkR = new ImageIcon(PlayerSprite.this.getClass().getResource("bcrawlR.gif"));
-        attackL = new ImageIcon(PlayerSprite.this.getClass().getResource("bcryL.gif"));
-        attackR = new ImageIcon(PlayerSprite.this.getClass().getResource("bcryR.gif"));
+        standL = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/standL.gif"));
+        standR = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/standR.gif"));
+        walkL = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/walkL.gif"));
+        walkR = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/walkR.gif"));
+        attackL = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/attackL.gif"));
+        attackR = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/attackR.gif"));
         current = new JLabel(standR);
     }
 

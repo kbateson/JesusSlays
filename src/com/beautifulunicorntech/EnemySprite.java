@@ -17,10 +17,12 @@ public class EnemySprite extends Sprite {
 
     public EnemySprite() {
         initES();
+        x = 300;
+        y = 150;
     }
 
     private void initES() {
-        standL = new ImageIcon(EnemySprite.this.getClass().getResource("estandL.gif"));
+        standL = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/estandL.gif"));
         //standR = new ImageIcon(EnemySprite.this.getClass().getResource("estandR.gif"));
         //walkL = new ImageIcon(EnemySprite.this.getClass().getResource("ewalkL.gif"));
         //walkR = new ImageIcon(EnemySprite.this.getClass().getResource("ewalkR.gif"));

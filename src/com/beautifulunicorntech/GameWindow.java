@@ -20,7 +20,9 @@ public class GameWindow extends JPanel implements ActionListener {
     private PlayerSprite sprite;
     private EnemySprite esprite;
     private Timer timer;
+    private Timer timerE;
     private final int DELAY = 10;
+    private final int DELAYe = 50;
     private JLabel spriteLabel;
     private JLabel espriteLabel;
 
@@ -29,7 +31,6 @@ public class GameWindow extends JPanel implements ActionListener {
         super.paintComponent(g);
 
         Toolkit.getDefaultToolkit().sync();
-
         drawBG(g);
         drawPS();
         drawES();
@@ -69,13 +70,16 @@ public class GameWindow extends JPanel implements ActionListener {
     private void initGame() throws MalformedURLException {
         setLayout(null);
         addKeyListener(new TAdapter());
+        ActionListener eMove = new EAdapter();
         setFocusable(true);
 
         sprite = new PlayerSprite();
         esprite = new EnemySprite();
 
         timer = new Timer(DELAY, this);
+        timerE = new Timer(DELAYe, eMove);
         timer.start();
+        timerE.start();
     }
 
     public GameWindow() throws MalformedURLException {
@@ -85,13 +89,13 @@ public class GameWindow extends JPanel implements ActionListener {
     private void drawPS() {
         spriteLabel = sprite.getImage();
         add(spriteLabel);
-        spriteLabel.setBounds(sprite.getX(), sprite.getY(), 140, 100);
+        spriteLabel.setBounds(sprite.getX(), sprite.getY(), 130, 130);
     }
 
     private void drawES() {
         espriteLabel = esprite.getImage();
         add(espriteLabel);
-        espriteLabel.setBounds(300, 120, 100, 100);
+        espriteLabel.setBounds(esprite.getX(), esprite.getY(), 100, 100);
     }
 
     @Override
@@ -110,6 +114,26 @@ public class GameWindow extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
             sprite.keyPressed(e);
+        }
+    }
+
+    private class EAdapter implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int eMoveX = 0;
+            int eMoveY = 0;
+            if (esprite.getX() < sprite.getX())
+                eMoveX = 1;
+            else if (esprite.getX() > sprite.getX())
+                eMoveX = -1;
+            if (esprite.getY() < sprite.getY())
+                eMoveY = 1;
+            else if (esprite.getY() > sprite.getY())
+                eMoveY = -1;
+            esprite.dx = eMoveX;
+            esprite.dy = eMoveY;
+            esprite.move();
+            repaint();
         }
     }
 
