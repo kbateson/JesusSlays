@@ -16,8 +16,11 @@ public class PlayerSprite extends Sprite {
     private ImageIcon walkR;
     private ImageIcon attackL;
     private ImageIcon attackR;
+    private ImageIcon hurtL;
+    private ImageIcon hurtR;
     private JLabel current;
     private int dir;
+    boolean attack = false;
 
 
     public PlayerSprite() {
@@ -31,7 +34,11 @@ public class PlayerSprite extends Sprite {
         walkR = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/walkR.gif"));
         attackL = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/attackL.gif"));
         attackR = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/attackR.gif"));
+        hurtL = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/hurtL.gif"));
+        hurtR = new ImageIcon(PlayerSprite.this.getClass().getResource("Images/Adult/hurtR.gif"));
         current = new JLabel(standR);
+        x = -30;
+        y = 100;
     }
 
     public JLabel getImage() {
@@ -71,6 +78,7 @@ public class PlayerSprite extends Sprite {
         }
 
         if (key == KeyEvent.VK_SPACE) {
+            attack = true;
             if(dir == KeyEvent.VK_LEFT)
                 current.setIcon(attackL);
             else
@@ -109,10 +117,23 @@ public class PlayerSprite extends Sprite {
         }
 
         if (key == KeyEvent.VK_SPACE) {
+            attack = false;
             if (dir == KeyEvent.VK_LEFT)
                 current.setIcon(standL);
             else
                 current.setIcon(standR);
         }
     }
+
+    public void hurt(int attDir) {
+        if (attDir < 0) {
+            current.setIcon(hurtL);
+            x += 50;
+        } else {
+            current.setIcon(hurtR);
+            x -= 50;
+        }
+    }
+
+    public boolean attacking() { return attack; }
 }

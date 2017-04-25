@@ -1,6 +1,7 @@
 package com.beautifulunicorntech;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by Kristen on 4/9/17.
@@ -12,6 +13,8 @@ public class EnemySprite extends Sprite {
     private ImageIcon walkR;
     private ImageIcon attackL;
     private ImageIcon attackR;
+    private ImageIcon hurtL;
+    private ImageIcon hurtR;
     private JLabel current;
     private int dir;
 
@@ -29,6 +32,8 @@ public class EnemySprite extends Sprite {
         walkR = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/walkR.gif"));
         //attackL = new ImageIcon(EnemySprite.this.getClass().getResource("attackL.gif"));
         //attackR = new ImageIcon(EnemySprite.this.getClass().getResource("attackR.gif"));
+        hurtL = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/hurtL.gif"));
+        hurtR = new ImageIcon(EnemySprite.this.getClass().getResource("Images/Enemy/hurtR.gif"));
         current = new JLabel(standL);
     }
 
@@ -47,4 +52,22 @@ public class EnemySprite extends Sprite {
     }
 
     public int getDir() { return dir; }
+
+    public void hurt(int attDir) {
+        if (attDir > 0) {
+            current.setIcon(hurtL);
+            x += 50;
+        } else {
+            current.setIcon(hurtR);
+            x -= 50;
+        }
+    }
+
+    public void notHurt() {
+        if(dir == 1)
+            current.setIcon(standR);
+        else
+            current.setIcon(standL);
+    }
+
 }

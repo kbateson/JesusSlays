@@ -1,5 +1,6 @@
 package com.beautifulunicorntech;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,6 +9,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,6 +33,7 @@ public class GameWindow extends JPanel implements ActionListener {
         super.paintComponent(g);
 
         Toolkit.getDefaultToolkit().sync();
+
         drawBG(g);
         drawPS();
         drawES();
@@ -73,8 +76,25 @@ public class GameWindow extends JPanel implements ActionListener {
         ActionListener eMove = new EAdapter();
         setFocusable(true);
 
+        try {
+            Clip clip = AudioSystem.getClip();
+            File music = new File("/Users/Kristen/Desktop/JesusSlays/src/com/beautifulunicorntech/Music/01 Broken Season.wav");
+            AudioInputStream ais = AudioSystem.getAudioInputStream(music);
+            clip.open(ais);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         sprite = new PlayerSprite();
         esprite = new EnemySprite();
+        spriteLabel = sprite.getImage();
+        espriteLabel = esprite.getImage();
 
         timer = new Timer(DELAY, this);
         timerE = new Timer(DELAYe, eMove);
@@ -89,13 +109,13 @@ public class GameWindow extends JPanel implements ActionListener {
     private void drawPS() {
         spriteLabel = sprite.getImage();
         add(spriteLabel);
-        spriteLabel.setBounds(sprite.getX(), sprite.getY(), 130, 130);
+        spriteLabel.setBounds(sprite.getX(), sprite.getY(), 70, 120);
     }
 
     private void drawES() {
         espriteLabel = esprite.getImage();
         add(espriteLabel);
-        espriteLabel.setBounds(esprite.getX(), esprite.getY(), 100, 100);
+        espriteLabel.setBounds(esprite.getX(), esprite.getY(), 90, 100);
     }
 
     @Override
@@ -122,24 +142,39 @@ public class GameWindow extends JPanel implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int eMoveX = 0;
             int eMoveY = 0;
-            if (esprite.getX() < sprite.getX())
+            int xDir = esprite.getX() - sprite.getX();
+            int yDir = esprite.getY() - sprite.getY();
+            int attDir;
+            if(xDir < 0)
+                attDir = -1;
+            else
+                attDir = 1;
+            if (xDir < 0)
                 eMoveX = 1;
-            else if (esprite.getX() > sprite.getX())
+            else if (xDir > 0)
                 eMoveX = -1;
-            if (esprite.getY() < sprite.getY()) {
+            if (yDir < 0) {
                 eMoveY = 1;
-                //setComponentZOrder(spriteLabel, 0);
-            } else if (esprite.getY() > sprite.getY()) {
+            } else if (yDir > 0) {
                 eMoveY = -1;
-                //setComponentZOrder(espriteLabel, 0);
             }
             if(esprite.getDir() != eMoveX)
                 esprite.changeDir();
             esprite.dx = eMoveX;
             esprite.dy = eMoveY;
+            esprite.notHurt();
             esprite.move();
+            if(collision()) {
+                if (sprite.attacking()) {
+                    esprite.hurt(attDir);
+                } else
+                    sprite.hurt(attDir);
+            }
             repaint();
         }
     }
 
+    private boolean collision() {
+        return (spriteLabel.getBounds().intersects(espriteLabel.getBounds()));
+    }
 }
