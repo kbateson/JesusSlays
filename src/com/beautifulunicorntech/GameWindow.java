@@ -19,14 +19,19 @@ import java.net.URL;
  */
 public class GameWindow extends JPanel implements ActionListener {
 
-    private PlayerSprite sprite;
-    private EnemySprite esprite;
+    private Player player;
+    private Enemy enemy;
     private Timer timer;
     private Timer timerE;
+    private Timer wait;
     private final int DELAY = 10;
     private final int DELAYe = 50;
     private JLabel spriteLabel;
+    private JLabel spriteBox;
     private JLabel espriteLabel;
+    private JLabel espriteBox;
+    private JLabel healthBar;
+    private JLabel score;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -90,11 +95,24 @@ public class GameWindow extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
+        player = new Player();
+        enemy = new Enemy();
+        spriteLabel = player.getImage();
+        spriteBox = new JLabel();
+        espriteLabel = enemy.getImage();
+        espriteBox = new JLabel();
 
-        sprite = new PlayerSprite();
-        esprite = new EnemySprite();
-        spriteLabel = sprite.getImage();
-        espriteLabel = esprite.getImage();
+        healthBar = new JLabel();
+        healthBar.setText("HP: " + player.getcHP() + " / " + player.gettHP());
+        healthBar.setFont(new Font("Verdana", Font.BOLD, 16));
+        healthBar.setBounds(100, -90, 200, 200);
+        add(healthBar);
+
+        score = new JLabel();
+        score.setText("Score: " + player.getScore());
+        score.setFont(new Font("Verdana", Font.BOLD, 16));
+        score.setBounds(250, -90, 200, 200);
+        add(score);
 
         timer = new Timer(DELAY, this);
         timerE = new Timer(DELAYe, eMove);
@@ -107,20 +125,22 @@ public class GameWindow extends JPanel implements ActionListener {
     }
 
     private void drawPS() {
-        spriteLabel = sprite.getImage();
+        spriteLabel = player.getImage();
         add(spriteLabel);
-        spriteLabel.setBounds(sprite.getX(), sprite.getY(), 70, 120);
+        spriteLabel.setBounds(player.getX(), player.getY(), 120, 120);
+        spriteBox.setBounds(player.getX(), player.getY(), 70, 100);
     }
 
     private void drawES() {
-        espriteLabel = esprite.getImage();
+        espriteLabel = enemy.getImage();
         add(espriteLabel);
-        espriteLabel.setBounds(esprite.getX(), esprite.getY(), 90, 100);
+        espriteLabel.setBounds(enemy.getX(), enemy.getY(), 100, 100);
+        espriteBox.setBounds(enemy.getX(), enemy.getY(), 50, 90);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        sprite.move();
+        player.move();
         repaint();
     }
 
@@ -128,22 +148,30 @@ public class GameWindow extends JPanel implements ActionListener {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            sprite.keyReleased(e);
+            player.keyReleased(e);
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            sprite.keyPressed(e);
+            player.keyPressed(e);
         }
     }
 
     private class EAdapter implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            ActionListener w = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    timerE.start();
+                    wait.stop();
+                }
+            };
+            wait = new Timer(2000, w);
             int eMoveX = 0;
             int eMoveY = 0;
-            int xDir = esprite.getX() - sprite.getX();
-            int yDir = esprite.getY() - sprite.getY();
+            int xDir = enemy.getX() - player.getX();
+            int yDir = enemy.getY() - player.getY();
             int attDir;
             if(xDir < 0)
                 attDir = -1;
@@ -158,23 +186,38 @@ public class GameWindow extends JPanel implements ActionListener {
             } else if (yDir > 0) {
                 eMoveY = -1;
             }
-            if(esprite.getDir() != eMoveX)
-                esprite.changeDir();
-            esprite.dx = eMoveX;
-            esprite.dy = eMoveY;
-            esprite.notHurt();
-            esprite.move();
+            enemy.move(eMoveX, eMoveY);
             if(collision()) {
-                if (sprite.attacking()) {
-                    esprite.hurt(attDir);
-                } else
-                    sprite.hurt(attDir);
+                if (player.attacking()) {
+                    timerE.stop();
+                    wait.start();
+                    if(!enemy.hurt(attDir)) {
+                        espriteLabel.setVisible(false);
+                        timerE.stop();
+                        wait.stop();
+                        remove(espriteLabel);
+                        remove(espriteBox);
+                        enemy = null;
+                        player.kill();
+                        enemy = new Enemy();
+                        timerE.start();
+                    }
+                } else {
+                    if (!player.hurt(attDir))
+                        return;
+                }
+                healthBar.setText("HP: " + player.getcHP() + " / " + player.gettHP());
+                score.setText("Score: " + player.getScore());
             }
             repaint();
         }
     }
 
     private boolean collision() {
-        return (spriteLabel.getBounds().intersects(espriteLabel.getBounds()));
+        return (spriteBox.getBounds().intersects(espriteBox.getBounds()));
+    }
+
+    private void gameOver() {
+
     }
 }

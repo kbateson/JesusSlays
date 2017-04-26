@@ -2,6 +2,8 @@ package com.beautifulunicorntech;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Kristen on 4/9/17.
@@ -20,7 +22,7 @@ public class EnemySprite extends Sprite {
 
     public EnemySprite() {
         initES();
-        x = 300;
+        x = 500;
         y = 150;
         dir = -1;
     }

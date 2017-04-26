@@ -24,8 +24,8 @@ public class Sprite
         x += dx;
         if(x < -50)
             x = -50;
-        else if(x > 400)
-            x = 400;
+        else if(x > 500)
+            x = 500;
         y += dy;
         if(y < 120)
             y = 120;
